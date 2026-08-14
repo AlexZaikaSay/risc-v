@@ -5,7 +5,8 @@ module alu #(
     input  logic [N-1:0] a,
     input  logic [N-1:0] b,
     output logic [N-1:0] result,
-    output logic  c
+    output logic  c,
+    output logic  z
 );
 
     logic [N-1:0] and_out;
@@ -36,4 +37,7 @@ module alu #(
             default: result = {N{1'bz}};
         endcase
     end
+
+    assign z = (result == {N{1'b0}});
+
 endmodule
