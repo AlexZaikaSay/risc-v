@@ -9,6 +9,7 @@ module tb_04_signextend;
     logic rst;
     logic [31:0] inst;
     logic [1:0] ext_op;
+    logic [5:0] dummy;
     logic [31:0] extended;
     logic [31:0] extended_expected;
     logic [31:0] vectornum, errors;
@@ -24,7 +25,7 @@ module tb_04_signextend;
     initial begin
         $dumpfile("tb_04_signextend.vcd");
         $dumpvars(0, tb_04_signextend);
-        $readmemh("../testbenches/data/tb_04_signextend.tv", testvectors);
+        $readmemh("./tests/tb_04_signextend.tv", testvectors);
         vectornum = 0; errors = 0;
         rst = 1; #10; rst = 0;
     end
@@ -38,14 +39,7 @@ module tb_04_signextend;
     always @(posedge clk)
     begin
         #1;
-        ext_op <= testvectors[vectornum][65:64];
-        inst <= testvectors[vectornum][63:32];
-        extended_expected <= testvectors[vectornum][31:0];
-        if (testvectors[vectornum] === 72'bx)
-        begin
-            $display("%0d tests completed with %0d errors", vectornum, errors);
-            $finish;
-        end
+        {dummy, ext_op, inst, extended_expected} = testvectors[vectornum];
     end
 
      always @(negedge clk)
@@ -54,9 +48,18 @@ module tb_04_signextend;
             if (extended !== extended_expected) 
             begin // check result
                 $error("Error: inst = %h ext_op = %b extended = %h (expected %h) on step %0d", inst, ext_op, extended, testvectors[vectornum][31:0], vectornum);
-                errors <= errors + 1;
+                errors = errors + 1;
             end
-            vectornum <= vectornum + 1;
+            vectornum = vectornum + 1;
+
+            if (testvectors[vectornum][71:66] === 6'b111111)
+            begin
+                if (errors != 0)
+                    $fatal(1, "TEST FAILED: %0d errors across %0d tests", errors, vectornum);
+
+                $display("TEST PASSED: %0d tests", vectornum);
+                $finish;
+            end
         end
 
 endmodule

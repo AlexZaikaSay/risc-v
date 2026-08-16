@@ -16,6 +16,7 @@ module tb_03_regs;
     logic [31:0] rd1;
     logic [31:0] rd2;
     logic [31:0] wd3;
+    int unsigned errors;
 
     regs regs_data (
         .clk(clk),
@@ -32,6 +33,7 @@ module tb_03_regs;
 
     initial begin
         clk = 0;
+        errors = 0;
         $dumpfile("tb_03_regs.vcd");
         $dumpvars(0, tb_03_regs);
         $dumpvars(0, regs_data);
@@ -53,13 +55,19 @@ module tb_03_regs;
             if (rd1 !== i << 16) 
             begin // check result
                 $error("Error: a1 = %h rd1 = %h (expected %h) on step %0d", a1, rd1, i << 16, i);
+                errors++;
             end
             if (rd2 !== i << 16) 
             begin // check result
                 $error("Error: a2 = %h rd2 = %h (expected %h) on step %0d", a2, rd2, i << 16, i);
+                errors++;
             end
             #19;
         end
+        if (errors != 0)
+            $fatal(1, "TEST FAILED: %0d errors", errors);
+
+        $display("TEST PASSED");
         $finish;
     end
 

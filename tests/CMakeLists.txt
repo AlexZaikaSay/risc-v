@@ -11,7 +11,7 @@ foreach(SRC ${ASM_SOURCES})
     set(OBJ ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.o)
     set(ELF ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.elf)
     set(BIN ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.bin)
-    set(MEM ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.mem)
+    set(TV ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.tv)
 
     add_custom_command(OUTPUT ${OBJ}
         COMMAND ${RISCV_AS} -march=rv32i -mabi=ilp32 -o ${OBJ} ${SRC}
@@ -25,10 +25,10 @@ foreach(SRC ${ASM_SOURCES})
         COMMAND ${RISCV_OC} -O binary ${ELF} ${BIN}
         DEPENDS ${ELF})
 
-    add_custom_command(OUTPUT ${MEM}
-        COMMAND ${CMAKE_COMMAND} -DINPUT=${BIN} -DOUTPUT=${MEM}
+    add_custom_command(OUTPUT ${TV}
+        COMMAND ${CMAKE_COMMAND} -DINPUT=${BIN} -DOUTPUT=${TV}
                 -P ${CMAKE_SOURCE_DIR}/cmake/hexdump.cmake
         DEPENDS ${BIN})
 
-    add_custom_target(${NAME} ALL DEPENDS ${MEM})
+    add_custom_target(${NAME} ALL DEPENDS ${TV})
 endforeach()

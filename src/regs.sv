@@ -1,5 +1,9 @@
 
 module regs
+#
+(
+    parameter REGS_FILE = ""
+)
 (
     input logic clk,
     input logic we3,
@@ -12,6 +16,21 @@ module regs
 );
     // 32 registers, each 32 bits wide
     logic [31:0] regs_array [0:31]; 
+    logic [39:0] regs_script [0:255];
+
+    initial
+    begin
+        $display("Loading registers from file: %s", REGS_FILE);
+        if (REGS_FILE != "")
+        begin
+            $readmemh(REGS_FILE, regs_script);
+            for (int i = 0; regs_script[i][36:32] !== 5'bx; i++)
+            begin
+                $display("Loading: %0d register => %h", regs_script[i][36:32], regs_script[i][31:0]);
+                regs_array[regs_script[i][36:32]] = regs_script[i][31:0];
+            end
+        end
+    end
 
     always_ff @(posedge clk)
     begin
