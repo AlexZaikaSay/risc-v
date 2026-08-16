@@ -14,21 +14,24 @@ module tb_05_alu;
     logic [31:0] expected_result;
     logic [31:0] vectornum, errors;
     logic [103:0] testvectors[0:255];
+    logic [4:0] dummy;
 
 
     alu alu_data (
         .alu_op(alu_op),
         .a(a),
         .b(b),
-        .result(result)
+        .result(result),
+        .c(),
+        .z()
     );
 
     initial begin
         $dumpfile("tb_05_alu.vcd");
         $dumpvars(0, tb_05_alu);
-        $readmemh("../testbenches/data/tb_05_alu.tv", testvectors);
+        $readmemh("./tests/tb_05_alu.tv", testvectors);
         vectornum = 0; errors = 0;
-        rst = 1; #10; rst = 0;
+        rst = 1; #22; rst = 0;
     end
 
     initial begin
@@ -39,15 +42,17 @@ module tb_05_alu;
     // apply test vectors on rising edge of clk
     always @(posedge clk)
     begin
-        #1;
-        alu_op <= testvectors[vectornum][98:96];
-        a <= testvectors[vectornum][95:64];
-        b <= testvectors[vectornum][63:32];
-        expected_result <= testvectors[vectornum][31:0];
-        if (testvectors[vectornum] === 104'bx)
-        begin
-            $display("%0d tests completed with %0d errors", vectornum, errors);
-            $finish;
+        if (~rst) 
+        begin // skip during reset
+            {dummy, alu_op, a, b, expected_result} <= testvectors[vectornum];
+                        if (testvectors[vectornum] === 104'bx)
+            begin
+                if (errors != 0)
+                    $fatal(1, "TEST FAILED: %0d errors across %0d tests", errors, vectornum);
+
+                $display("TEST PASSED: %0d tests", vectornum);
+                $finish;
+            end
         end
     end
 

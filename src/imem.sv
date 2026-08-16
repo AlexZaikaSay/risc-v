@@ -1,7 +1,7 @@
 module imem
 #(
-    parameter string MEM_FILE = "./tests/t1.mem",
-    parameter int MEM_SIZE = 'h100
+    parameter IMEM_FILE = "",
+    parameter int IMEM_SIZE = 'h100
 )
 (
     /* verilator lint_off UNUSED */
@@ -10,12 +10,14 @@ module imem
     output logic [31:0] data_out
 );
 
-    localparam int ADDR_BITS = $clog2(MEM_SIZE);
+    localparam int ADDR_BITS = $clog2(IMEM_SIZE);
 
-    logic [31:0] data_array [0:MEM_SIZE-1];
+    logic [31:0] data_array [0:IMEM_SIZE-1];
 
-    initial begin
-        $readmemh(MEM_FILE, data_array);
+    initial
+    begin
+        if (IMEM_FILE != "")
+            $readmemh(IMEM_FILE, data_array);
     end
 
     assign data_out = data_array[addr[ADDR_BITS+1:2]];

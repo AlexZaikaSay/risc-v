@@ -9,8 +9,8 @@ module  tb_01_imem;
     logic [31:0] instruction;
 
     imem #(
-        .MEM_FILE("./tests/t1.mem"),
-        .MEM_SIZE(16)
+        .IMEM_FILE("./tests/tb_06_imem.tv"),
+        .IMEM_SIZE(16)
     ) imem_inst (
         .addr(addr),
         .data_out(instruction)

@@ -12,31 +12,39 @@ module tb_06_1_cycle_cpu;
     logic [2:0] alu_op;
     logic [31:0] result;
     logic [31:0] expected_result;
+    logic [31:0] pc;
 
 
-    top top_data (
+    top #(
+        .IMEM_FILE("./tests/tb_06_imem.tv"),
+        .MEM_FILE("./tests/tb_06_mem.tv"),
+        .REGS_FILE("./tests/tb_06_regs.tv")
+    )
+    top_data
+    (
         .clk(clk),
-        .rst(rst)
+        .rst(rst),
+        .pc_start(32'h00001000)
     );
 
     initial begin
         $dumpfile("tb_06_1_cycle_cpu.vcd");
         $dumpvars(0, tb_06_1_cycle_cpu);
-        rst = 1; #10; rst = 0;
+        rst = 1; #2; rst = 0;
     end
 
     initial begin
-        for (integer i = 0; i < 100; i++)
+        for (integer i = 0; i < 4; i++)
         begin
             clk = 0;
             #5;
             clk = 1;
             #5;
         end
-        if (top_data.cpu.pc == 32'h000000)
+        if (top_data.cpu.pc == 32'h00001000)
             $display("Test passed");
         else
-            $display("Test failed: pc = %h", top_data.cpu.pc);
+                $fatal(1, "TEST FAILED: pc = %h", top_data.cpu.pc);
         $finish;
     end
 

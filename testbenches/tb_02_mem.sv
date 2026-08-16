@@ -11,6 +11,7 @@ module tb_02_mem;
     logic [31:0] addr;
     logic [31:0] data_out;
     logic [31:0] data_in;
+    int unsigned errors;
 
     mem mem_data (
         .clk(clk),
@@ -24,6 +25,7 @@ module tb_02_mem;
 
     initial begin
         clk = 0;
+        errors = 0;
         $dumpfile("tb_02_mem.vcd");
         $dumpvars(0, tb_02_mem);
         $dumpvars(0, mem_data);
@@ -44,9 +46,14 @@ module tb_02_mem;
             if (data_out !== i) 
             begin // check result
                 $error("Error: addr = %h data_out = %h on step %0d", addr, data_out, i);
+                errors++;
             end
             #10;
         end
+        if (errors != 0)
+            $fatal(1, "TEST FAILED: %0d errors", errors);
+
+        $display("TEST PASSED");
         $finish;
     end
 

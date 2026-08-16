@@ -6,11 +6,16 @@
 `include "signext.sv"
 `include "controlblock.sv"
 
-module cpu (
+module cpu
+# (
+    parameter REGS_FILE = ""
+)
+(
     input  logic        clk,
     input  logic        rst,
     input  logic [31:0] instr,
     input  logic [31:0] read_data,
+    input  logic [31:0] pc_start,
     output logic [31:0] pc,
     output logic [31:0] mem_addr,
     output logic [31:0] write_data,
@@ -36,6 +41,7 @@ module cpu (
         .clk(clk),
         .rst(rst),
         .d(pc_next),
+        .start_value(pc_start),
         .q(pc)
     );
 
@@ -60,7 +66,9 @@ module cpu (
         .y(result)
     );
 
-    regs regs_file (
+    regs #(
+        .REGS_FILE(REGS_FILE)
+    ) regs_file (
         .clk(clk),
         .we3(reg_write),
         .a1(instr[19:15]),
