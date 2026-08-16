@@ -76,11 +76,10 @@ foreach(TB_FILE ${TESTBENCHS})
     )
     add_dependencies(sim_${TB_NAME} copy_testvectors)
 
-    if(TB_NAME STREQUAL "tb_01_imem")
-        add_dependencies(sim_${TB_NAME} tb_06_imem)
+    if(TARGET ${TB_NAME})
+        add_dependencies(sim_${TB_NAME} ${TB_NAME})
     endif()
 
-    
     add_dependencies(sim_all sim_${TB_NAME})
 endforeach()
 

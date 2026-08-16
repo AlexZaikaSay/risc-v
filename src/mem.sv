@@ -23,13 +23,13 @@ module mem
 
     initial
     begin
+        for (int i = 0; i < MEM_SIZE; i++)
+        begin
+            data_array[i] = 32'h0;
+        end
         if (MEM_FILE != "")
         begin
             $readmemh(MEM_FILE, mem_script);
-            for (int i = 0; i < MEM_SIZE; i++)
-            begin
-                data_array[i] = 32'h0;
-            end
             for (int i = 0; mem_script[i][31:0] !== 32'bx; i++)
             begin
                 $display("set mem[%h] = %h", mem_script[i][63:32], mem_script[i][31:0]);

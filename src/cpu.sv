@@ -1,7 +1,8 @@
 
-`include "alu.sv"
 `include "ff.sv"
 `include "mux2_1.sv"
+`include "mux3_1.sv"
+`include "alu.sv"
 `include "regs.sv"
 `include "signext.sv"
 `include "controlblock.sv"
@@ -33,7 +34,7 @@ module cpu
     logic [1:0]  imm_src;
     logic [2:0]  alu_control;
     logic        alu_src;
-    logic        result_src;
+    logic [1:0]  result_src;
     logic        reg_write;
     logic        pc_src;
 
@@ -59,9 +60,10 @@ module cpu
         .y(src_b) 
     );
 
-    mux2_1 result_mux (
+    mux3_1 result_mux (
         .a(mem_addr),
         .b(read_data),
+        .c(pc_plus4),
         .sel(result_src),
         .y(result)
     );

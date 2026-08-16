@@ -18,7 +18,7 @@ module signext
             // B-type
             2'b10: extended = {{20{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0}; 
             // J-type
-            2'b11: extended = {{13{instr[31]}}, instr[19:12], instr[20], instr[30:21]};
+            2'b11: extended = {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0};
         endcase
     end
 endmodule
