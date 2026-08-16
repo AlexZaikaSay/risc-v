@@ -21,6 +21,10 @@ module regs
     initial
     begin
         $display("Loading registers from file: %s", REGS_FILE);
+        for (int i = 0; i < 32; i++)
+        begin
+            regs_array[i] = 32'h0;
+        end
         if (REGS_FILE != "")
         begin
             $readmemh(REGS_FILE, regs_script);

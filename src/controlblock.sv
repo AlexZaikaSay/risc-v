@@ -9,18 +9,19 @@ module controlblock
     input  logic [2:0] funct3,
     input  logic       zero,
     output logic       pc_src,
-    output logic       result_src,
+    output logic [1:0] result_src,
     output logic       mem_write,
     output logic [2:0] alu_control,
     output logic       alu_src,
     output logic [1:0] imm_src,
-    output logic       reg_write
+    output logic       reg_write,
+    output logic       jump
 );
 
     logic branch;
     logic [1:0] alu_op;
 
-    assign pc_src = branch & zero;
+    assign pc_src = (branch & zero) | jump;
 
     maindecoder main_decoder (
         .opcode(opcode),
@@ -30,7 +31,8 @@ module controlblock
         .alu_src(alu_src),
         .imm_src(imm_src),
         .reg_write(reg_write),
-        .alu_op(alu_op)
+        .alu_op(alu_op),
+        .jump(jump)
     );
 
     aludecoder alu_decoder (

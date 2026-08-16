@@ -16,7 +16,7 @@ module tb_06_1_cycle_cpu;
 
 
     top #(
-        .IMEM_FILE("./tests/tb_06_imem.tv"),
+        .IMEM_FILE("./tests/tb_06_1_cycle_cpu.tv"),
         .MEM_FILE("./tests/tb_06_mem.tv"),
         .REGS_FILE("./tests/tb_06_regs.tv")
     )
