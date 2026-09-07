@@ -9,7 +9,7 @@ module  tb_01_imem;
     logic [31:0] instruction;
 
     imem #(
-        .IMEM_FILE("./tests/tb_06_imem.tv"),
+        .IMEM_FILE("./tests/tb_01_imem.tv"),
         .IMEM_SIZE(16)
     ) imem_inst (
         .addr(addr),
