@@ -1,12 +1,11 @@
 
-`include "cpu.sv"
+`include "cpumulti.sv"
 `include "mem.sv"
-`include "imem.sv"
 
-module top
+module topmulti
 # (
-    parameter IMEM_FILE = "",
     parameter MEM_FILE = "",
+    parameter IMEM_FILE = "",
     parameter REGS_FILE = ""
 )
 (
@@ -15,40 +14,33 @@ module top
 );
 
     logic [31:0] instr;
-    logic [31:0] mem_addr;
+    logic [31:0] addr;
     logic [31:0] mem_rd;
     logic [31:0] mem_wd;
     logic        we;
     logic [31:0] pc;
 
-    cpu #(
+    cpumulti #(
         .REGS_FILE(REGS_FILE)
     ) cpu (
         .clk(clk),
         .rst(rst),
-        .pc(pc),
-        .instr(instr),
-        .mem_addr(mem_addr),
+        .addr(addr),
         .read_data(mem_rd),
         .write_data(mem_wd),
         .we(we)
     );
 
     mem #(
-        .MEM_FILE(MEM_FILE)
+        .MEM_FILE(MEM_FILE),
+        .IMEM_FILE(IMEM_FILE)
     ) memory (
         .clk(clk),
-        .addr(mem_addr),
+        .addr(addr),
         .data_out(mem_rd),
         .data_in(mem_wd),
         .we(we)
     );
 
-    imem #(
-        .IMEM_FILE(IMEM_FILE)
-    ) imem (
-        .addr(pc),
-        .data_out(instr)
-    );
 
 endmodule

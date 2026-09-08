@@ -13,7 +13,10 @@ module alu #(
     logic [N-1:0] or_out;
     logic [N-1:0] add_out;
     logic [N-1:0] b_in;
+    logic [N-1:0] xor_out;
     logic slt;
+    logic [N-1:0] sll;
+    logic [N-1:0] srl;
 
     always @*
     begin
@@ -26,6 +29,9 @@ module alu #(
         {c, add_out} = a + b_in;
         and_out = a & b;
         or_out  = a | b;
+        xor_out = a ^ b;
+        sll = a << b[4:0];
+        srl = a >> b[4:0];
 
         slt = (~(alu_op[0] ^ b[N-1] ^ a[N-1]) & (add_out[N-1] ^ a[N-1]) & ~alu_op[1]) ^ add_out[N-1];
 
@@ -33,6 +39,9 @@ module alu #(
             3'b00?: result = add_out;
             3'b010: result = and_out;
             3'b011: result = or_out;
+            3'b100: result = xor_out;
+            3'b110: result = sll;
+            3'b111: result = srl;
             3'b101: result = { {(N-1){1'b0}}, slt};
             default: result = {N{1'bz}};
         endcase

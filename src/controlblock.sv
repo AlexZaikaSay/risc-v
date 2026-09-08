@@ -21,7 +21,7 @@ module controlblock
     logic branch;
     logic [1:0] alu_op;
 
-    assign pc_src = (branch & zero) | jump;
+    assign pc_src = (branch & (zero ^ funct3[0])) | jump;
 
     maindecoder main_decoder (
         .opcode(opcode),

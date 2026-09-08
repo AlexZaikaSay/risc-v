@@ -21,9 +21,13 @@ module aludecoder
                     5'b000_01: alu_control = 3'b000; // ADD
                     5'b000_10: alu_control = 3'b000; // ADD
                     5'b000_11: alu_control = 3'b001; // SUB
+                    5'b001_??: alu_control = 3'b110; // SLL
                     5'b010_??: alu_control = 3'b101; // SLT
+                    5'b100_??: alu_control = 3'b100; // XOR
+                    5'b101_?0: alu_control = 3'b111; // SRL
                     5'b110_??: alu_control = 3'b011; // OR
                     5'b111_??: alu_control = 3'b010; // AND
+                    
                     default: alu_control = 3'bxxx; // Don't care
                 endcase
             end
