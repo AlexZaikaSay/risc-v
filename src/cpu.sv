@@ -16,7 +16,6 @@ module cpu
     input  logic        rst,
     input  logic [31:0] instr,
     input  logic [31:0] read_data,
-    input  logic [31:0] pc_start,
     output logic [31:0] pc,
     output logic [31:0] mem_addr,
     output logic [31:0] write_data,
@@ -42,7 +41,6 @@ module cpu
         .clk(clk),
         .rst(rst),
         .d(pc_next),
-        .start_value(pc_start),
         .q(pc)
     );
 

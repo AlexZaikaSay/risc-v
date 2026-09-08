@@ -1,8 +1,9 @@
 
-module ff
+module ffen
 (
     input logic clk,
     input logic rst,
+    input logic enabled,
     input logic [31:0] d,
     output logic [31:0] q
 );
@@ -10,7 +11,7 @@ module ff
     begin
         if (rst)
             q <= 0;
-        else
+        else if (enabled)
             q <= d;
     end
 endmodule

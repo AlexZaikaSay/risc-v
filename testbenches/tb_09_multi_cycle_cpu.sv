@@ -1,9 +1,9 @@
 
-`include "top.sv"
+`include "topmulti.sv"
 
 /* verilator lint_off STMTDLY */
 
-module tb_06_1_cycle_cpu;
+module tb_09_multi_cycle_cpu;
 
     logic clk;
     logic rst;
@@ -15,7 +15,7 @@ module tb_06_1_cycle_cpu;
     logic [31:0] pc;
 
 
-    top #(
+    topmulti #(
         .MEM_FILE("./tests/tb_06_mem.tv"),
         .IMEM_FILE("./tests/01-short.tv"),
         .REGS_FILE("./tests/tb_06_regs.tv")
@@ -27,18 +27,16 @@ module tb_06_1_cycle_cpu;
     );
 
     initial begin
-        $dumpfile("tb_06_1_cycle_cpu.vcd");
-        $dumpvars(0, tb_06_1_cycle_cpu);
+        $dumpfile("tb_09_multi_cycle_cpu.vcd");
+        $dumpvars(0, tb_09_multi_cycle_cpu);
         rst = 1; #2; rst = 0;
     end
 
     initial begin
-        for (integer i = 0; i < 4; i++)
+        for (integer i = 0; i < 17; i++)
         begin
-            clk = 0;
-            #5;
-            clk = 1;
-            #5;
+            clk = 1; #5;
+            clk = 0; #5;
         end
         if (top_data.cpu.pc == 32'h00000000)
             $display("Test passed");
@@ -46,7 +44,6 @@ module tb_06_1_cycle_cpu;
                 $fatal(1, "TEST FAILED: pc = %h", top_data.cpu.pc);
         $finish;
     end
-
   
 endmodule
 

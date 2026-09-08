@@ -3,7 +3,7 @@
 
 /* verilator lint_off STMTDLY */
 
-module tb_07_1_cycle_cpu;
+module tb_08_1_cycle_cpu;
 
     logic clk;
     logic rst;
@@ -16,7 +16,7 @@ module tb_07_1_cycle_cpu;
 
 
     top #(
-        .IMEM_FILE("./tests/02-long.tv")
+        .IMEM_FILE("./tests/03-longer.tv")
     )
     top_device
     (
@@ -25,27 +25,28 @@ module tb_07_1_cycle_cpu;
     );
 
     initial begin
-        $dumpfile("tb_07_1_cycle_cpu.vcd");
-        $dumpvars(0, tb_07_1_cycle_cpu);
-        rst = 1; #2; rst = 0;
+        $dumpfile("tb_08_1_cycle_cpu.vcd");
+        $dumpvars(0, tb_08_1_cycle_cpu);
+        rst = 1; #22; rst = 0;
     end
 
     initial begin
-        for (integer i = 0; i < 20; i++)
+        clk = 0;
+        for (integer i = 0; i < 40; i++) 
         begin
-            clk = 0;
-            #5;
-            clk = 1;
-            #5;
+            clk = 1; #5; clk = 0; #5;
         end
     end
 
     always @(negedge clk)
     begin
-        if (top_device.we && top_device.mem_addr === 100)
+        if (top_device.we && top_device.mem_addr === 216)
         begin
-            if (top_device.mem_wd === 25)
+            if (top_device.mem_wd === 4140)
+            begin
                 $display("Test passed");
+                $stop;
+            end
             else
                 $fatal(1, "TEST FAILED: mem_addr = %h, mem_wd = %h", top_device.mem_addr, top_device.mem_wd);
         end
