@@ -20,7 +20,7 @@ module tb_09_multi_cycle_cpu;
         .IMEM_FILE("./tests/01-short.tv"),
         .REGS_FILE("./tests/tb_06_regs.tv")
     )
-    top_data
+    top_device
     (
         .clk(clk),
         .rst(rst)
@@ -38,10 +38,10 @@ module tb_09_multi_cycle_cpu;
             clk = 1; #5;
             clk = 0; #5;
         end
-        if (top_data.cpu.pc == 32'h00000000)
+        if (top_device.cpu.pc == 32'h00000000)
             $display("Test passed");
         else
-                $fatal(1, "TEST FAILED: pc = %h", top_data.cpu.pc);
+                $fatal(1, "TEST FAILED: pc = %h", top_device.cpu.pc);
         $finish;
     end
   
